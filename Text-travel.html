@@ -1,0 +1,97 @@
+<html>	
+	<head> 
+		<script type="text/javascript" src="jquery-1.11.2.min.js" ></script>
+		<style type="text/css">
+			.text-show-color{
+			    color:#000;
+			}
+			.text-hide-color{
+			    color:#eee;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<button id="startRead">ReadFast</button>
+		</div>
+		<div id="content">
+		</div>
+	</body>
+	<script>
+		wordLength  = 6;
+		wordsSpeed  = 100;
+		totalWords  = 0;
+		noWords     = 1;
+		paused      = false;
+		wordsPerMinute = wordsSpeed;
+		wordsPerSecond = wordsPerMinute/60; 
+		miliSecondsPerWord = 1000/wordsPerSecond;
+
+		$.ajax({
+			url: 'http://api.embed.ly/1/extract?key=7cb2e56465cf4fb6828de74b4125c90a&url=http://www.eenadu.net/Editorial/Mematainner.aspx?item=letter-1',
+			success: function(response){
+				console.log(response);
+				$("#content").html(response.content);
+				$("#content p").each(function(){
+					var text = $(this).text().split(' ');
+					for( var i = 0, len = text.length; i<len; i++ ) {
+				    	text[i] = '<span class="text-show-color">'+text[i]+'</span>'; 
+					}
+					totalWords = totalWords + i;			
+					console.log(text);
+					$(this).html(text.join(' '));
+				});
+			}
+		});
+		function updateWordSpeed(keyCode){
+			//paused = true;
+		    if(keyCode == 78){
+		        wordsPerMinute = wordsPerMinute + 30;
+		        wordsPerSecond = wordsPerMinute/60;
+		        miliSecondsPerWord = 1000/wordsPerSecond;
+		    }
+		    else if(keyCode == 66){
+		        if(wordsPerMinute >= 30){
+		            wordsPerMinute = wordsPerMinute - 30;
+		            wordsPerSecond = wordsPerMinute/60;
+		            miliSecondsPerWord = 1000/wordsPerSecond;
+		        }
+		    }
+		    miliSecondsPerWord = Math.round(miliSecondsPerWord);
+		}
+		$("#startRead").click(function(){
+		    startFlow();
+		});
+		function startFlow(){
+		    if(!paused)
+		    {
+		    	$("span").removeClass("text-show-color").addClass("text-hide-color");
+		    	showHide();
+		    }
+		}//end function startFlow(){
+		function showHide(){
+		    if(noWords <= totalWords && !paused){
+		    	console.log("Inside showHide");
+		        for(i = noWords; i < wordLength; i++)
+		            $("span:eq("+i+")").removeClass("text-hide-color").addClass("text-show-color");
+		        noWords = i;        
+		        $("span:eq("+(noWords - 5)+")").removeClass("text-show-color").addClass("text-hide-color");
+		    	$("span:eq("+(noWords)+")").removeClass("text-hide-color").addClass("text-show-color");
+		        noWords++;
+		        setTimeout(showHide, miliSecondsPerWord);
+		    }
+		}//end function showHide(){
+		$(document).keyup(function(event){
+		    if(event.keyCode == 32){
+		        paused = !paused;
+		        if(!paused) showHide();
+		    }
+		    if(event.keyCode == 66){
+		        updateWordSpeed(event.keyCode);
+		    }
+		    if(event.keyCode == 78){
+		        updateWordSpeed(event.keyCode);
+		    }  
+		});
+	</script>
+</html>

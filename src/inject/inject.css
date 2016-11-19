@@ -1,0 +1,54 @@
+/**
+ * Place your custom CSS styles here.
+ **/
+<style>
+
+a {color:#333; text-decoration:none}
+a:hover {color:#ccc; text-decoration:none}
+
+#mask {
+  position:absolute;
+  left:0;
+  top:0;
+  z-index:999998;
+  background-color:#000;
+  display:none;
+  
+}
+  
+#boxes .window {
+  position:fixed;
+  left:0;
+  top:0;
+  display:none;
+  z-index:999999;
+  padding:20px;
+}
+
+#boxes #dialog {
+  display: none;
+  width: 750px; 
+  height:480px;
+  padding:10px;
+  top: 100px !important;
+  background-color:#ffffff;
+  margin: auto auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+}
+
+.text-show-color, .text-hide-color{
+  font-family: "Adobe Caslon",Georgia,"Times New Roman",Times,serif !important;
+  font-size: 20px !important;
+  color: #000;
+}
+.text-hide-color{
+  color: #f1f1f1;
+}
+
+.text-show-color{
+  color: #000;  
+}
+
+</style>
